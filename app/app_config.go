@@ -53,7 +53,10 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 	"google.golang.org/protobuf/types/known/durationpb"
 
+	liquidmodulev1 "github.com/Srikarrao1/liquidity/api/liquidity/liquid/module"
 	liquiditymodulev1 "github.com/Srikarrao1/liquidity/api/liquidity/liquidity/module"
+	_ "github.com/Srikarrao1/liquidity/x/liquid/module" // import for side-effects
+	liquidmoduletypes "github.com/Srikarrao1/liquidity/x/liquid/types"
 	_ "github.com/Srikarrao1/liquidity/x/liquidity/module" // import for side-effects
 	liquiditymoduletypes "github.com/Srikarrao1/liquidity/x/liquidity/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
@@ -94,6 +97,7 @@ var (
 		circuittypes.ModuleName,
 		// chain modules
 		liquiditymoduletypes.ModuleName,
+		liquidmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -119,6 +123,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		liquiditymoduletypes.ModuleName,
+		liquidmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -138,6 +143,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		liquiditymoduletypes.ModuleName,
+		liquidmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -296,6 +302,10 @@ var (
 			{
 				Name:   liquiditymoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&liquiditymodulev1.Module{}),
+			},
+			{
+				Name:   liquidmoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&liquidmodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},

@@ -28,6 +28,18 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					RpcMethod: "UpdateParams",
 					Skip:      true, // skipped because authority gated
 				},
+				{
+					RpcMethod:      "CreatePool",
+					Use:            "create-pool [builder] [asset-a] [asset-b] [initial-amount-a] [initial-amount-b]",
+					Short:          "Send a create-pool tx",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "builder"}, {ProtoField: "assetA"}, {ProtoField: "assetB"}, {ProtoField: "initialAmountA"}, {ProtoField: "initialAmountB"}},
+				},
+				{
+					RpcMethod:      "AddLiquidity",
+					Use:            "add-liquidity [pool-id] [amount-a] [amount-b]",
+					Short:          "Send a add-liquidity tx",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "poolId"}, {ProtoField: "amountA"}, {ProtoField: "amountB"}},
+				},
 				// this line is used by ignite scaffolding # autocli/tx
 			},
 		},

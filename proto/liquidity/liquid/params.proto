@@ -1,0 +1,15 @@
+syntax = "proto3";
+package liquidity.liquid;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Srikarrao1/liquidity/x/liquid/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (amino.name) = "liquidity/x/liquid/Params";
+  option (gogoproto.equal) = true;
+
+  
+}

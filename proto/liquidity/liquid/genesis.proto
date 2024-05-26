@@ -1,0 +1,17 @@
+syntax = "proto3";
+package liquidity.liquid;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "liquidity/liquid/params.proto";
+
+option go_package = "github.com/Srikarrao1/liquidity/x/liquid/types";
+
+// GenesisState defines the liquid module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}

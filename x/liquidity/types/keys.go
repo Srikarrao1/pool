@@ -7,6 +7,9 @@ const (
 	// StoreKey defines the primary module store key
 	StoreKey = ModuleName
 
+	PoolKeyPrefix = "Pool/value/"
+	NextPoolIDPrefix = "Pool/nextID"
+
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_liquidity"
 )

@@ -15101,6 +15101,62 @@ paths:
               parameters.
       tags:
         - Msg
+  /liquidity.liquid.Msg/UpdateParams:
+    post:
+      summary: |-
+        UpdateParams defines a (governance) operation for updating the module
+        parameters. The authority defaults to the x/gov module account.
+      operationId: LiquidityLiquidMsg_UpdateParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            description: >-
+              MsgUpdateParamsResponse defines the response structure for
+              executing a
+
+              MsgUpdateParams message.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: body
+          description: MsgUpdateParams is the Msg/UpdateParams request type.
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              authority:
+                type: string
+                description: >-
+                  authority is the address that controls the module (defaults to
+                  x/gov unless overwritten).
+              params:
+                description: |-
+                  params defines the module parameters to update.
+
+                  NOTE: All parameters must be supplied.
+                type: object
+            description: MsgUpdateParams is the Msg/UpdateParams request type.
+      tags:
+        - Msg
   /Srikarrao1/liquidity/liquidity/params:
     get:
       summary: Parameters queries the parameters of the module.
@@ -15137,6 +15193,111 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
+  /liquidity.liquidity.Msg/AddLiquidity:
+    post:
+      operationId: LiquidityLiquidityMsg_AddLiquidity
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            title: Associated add liquidity response
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              creator:
+                type: string
+              initiator:
+                type: string
+              poolId:
+                type: string
+                format: uint64
+              amountA:
+                type: integer
+                format: int32
+              amountB:
+                type: integer
+                format: int32
+            title: Define the Add Liquidity message
+      tags:
+        - Msg
+  /liquidity.liquidity.Msg/CreatePool:
+    post:
+      operationId: LiquidityLiquidityMsg_CreatePool
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              pool_id:
+                type: string
+                format: uint64
+            title: Defines a message create pool response
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              creator:
+                type: string
+              builder:
+                type: string
+              assetA:
+                type: string
+              assetB:
+                type: string
+              initialAmountA:
+                type: integer
+                format: int32
+              initialAmountB:
+                type: integer
+                format: int32
+            title: Define the message for create pool
+      tags:
+        - Msg
   /liquidity.liquidity.Msg/UpdateParams:
     post:
       summary: |-
@@ -15185,10 +15346,7 @@ paths:
                   authority is the address that controls the module (defaults to
                   x/gov unless overwritten).
               params:
-                description: |-
-                  params defines the module parameters to update.
-
-                  NOTE: All parameters must be supplied.
+                description: 'NOTE: All parameters must be supplied.'
                 type: object
             description: MsgUpdateParams is the Msg/UpdateParams request type.
       tags:
@@ -21627,17 +21785,7 @@ definitions:
     description: |-
       Version defines the versioning scheme used to negotiate the IBC verison in
       the connection handshake.
-  liquidity.liquidity.Params:
-    type: object
-    description: Params defines the parameters for the module.
-  liquidity.liquidity.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        description: params holds all the parameters of this module.
-        type: object
-    description: QueryParamsResponse is response type for the Query/Params RPC method.
-  liquidity.liquidity.MsgUpdateParams:
+  liquidity.liquid.MsgUpdateParams:
     type: object
     properties:
       authority:
@@ -21650,6 +21798,81 @@ definitions:
           params defines the module parameters to update.
 
           NOTE: All parameters must be supplied.
+        type: object
+    description: MsgUpdateParams is the Msg/UpdateParams request type.
+  liquidity.liquid.MsgUpdateParamsResponse:
+    type: object
+    description: |-
+      MsgUpdateParamsResponse defines the response structure for executing a
+      MsgUpdateParams message.
+  liquidity.liquid.Params:
+    type: object
+    description: Params defines the parameters for the module.
+  liquidity.liquidity.Params:
+    type: object
+    description: Params defines the parameters for the module.
+  liquidity.liquidity.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+    description: QueryParamsResponse is response type for the Query/Params RPC method.
+  liquidity.liquidity.MsgAddLiquidity:
+    type: object
+    properties:
+      creator:
+        type: string
+      initiator:
+        type: string
+      poolId:
+        type: string
+        format: uint64
+      amountA:
+        type: integer
+        format: int32
+      amountB:
+        type: integer
+        format: int32
+    title: Define the Add Liquidity message
+  liquidity.liquidity.MsgAddLiquidityResponse:
+    type: object
+    title: Associated add liquidity response
+  liquidity.liquidity.MsgCreatePool:
+    type: object
+    properties:
+      creator:
+        type: string
+      builder:
+        type: string
+      assetA:
+        type: string
+      assetB:
+        type: string
+      initialAmountA:
+        type: integer
+        format: int32
+      initialAmountB:
+        type: integer
+        format: int32
+    title: Define the message for create pool
+  liquidity.liquidity.MsgCreatePoolResponse:
+    type: object
+    properties:
+      pool_id:
+        type: string
+        format: uint64
+    title: Defines a message create pool response
+  liquidity.liquidity.MsgUpdateParams:
+    type: object
+    properties:
+      authority:
+        type: string
+        description: >-
+          authority is the address that controls the module (defaults to x/gov
+          unless overwritten).
+      params:
+        description: 'NOTE: All parameters must be supplied.'
         type: object
     description: MsgUpdateParams is the Msg/UpdateParams request type.
   liquidity.liquidity.MsgUpdateParamsResponse:
