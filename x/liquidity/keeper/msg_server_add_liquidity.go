@@ -1,6 +1,7 @@
 package keeper
 
 import (
+    "errors"
     "context"
     sdk "github.com/cosmos/cosmos-sdk/types"
 	errorsmod "cosmossdk.io/errors"
@@ -19,6 +20,11 @@ func (k msgServer) AddLiquidity(goCtx context.Context, msg *types.MsgAddLiquidit
         return nil,  errorsmod.Wrap(sdkerrors.ErrUnknownRequest, "pool not found")
     }
 
+     // Ensure the provided amounts maintain the constant product formula
+     if !isValidAddition(int64(pool.ReserveA), int64(pool.ReserveA), int64(msg.AmountA), int64(msg.AmountB)) {
+        return nil, errors.New("invalid amounts for maintaining the constant product formula")
+    }
+
     // Update the reserves
     pool.ReserveA += msg.AmountA
     pool.ReserveB += msg.AmountB
@@ -27,6 +33,18 @@ func (k msgServer) AddLiquidity(goCtx context.Context, msg *types.MsgAddLiquidit
     k.SetPool(ctx, pool)
 
     return &types.MsgAddLiquidityResponse{}, nil
+}
+
+func isValidAddition(reserveA, reserveB, amountA, amountB int64) bool {
+    // Calculate the product of the current reserves
+    k := reserveA * reserveB
+    // Calculate the product of the new reserves after adding liquidity
+    newReserveA := reserveA + amountA
+    newReserveB := reserveB + amountB
+    newK := newReserveA * newReserveB
+
+    // Ensure the new product is not less than the current product
+    return newK >= k
 }
 
 // func (k Keeper) GetPool(ctx sdk.Context, id uint64) (types.Pool, bool) {

@@ -59,7 +59,7 @@ import (
 	liquidmoduletypes "github.com/Srikarrao1/liquidity/x/liquid/types"
 	_ "github.com/Srikarrao1/liquidity/x/liquidity/module" // import for side-effects
 	liquiditymoduletypes "github.com/Srikarrao1/liquidity/x/liquidity/types"
-	// this line is used by starport scaffolding # stargate/app/moduleImport
+
 )
 
 var (
@@ -98,7 +98,6 @@ var (
 		// chain modules
 		liquiditymoduletypes.ModuleName,
 		liquidmoduletypes.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -124,7 +123,6 @@ var (
 		// chain modules
 		liquiditymoduletypes.ModuleName,
 		liquidmoduletypes.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
 	endBlockers = []string{
