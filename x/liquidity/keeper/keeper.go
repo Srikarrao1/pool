@@ -10,6 +10,7 @@ import (
 	storetypes "cosmossdk.io/store/types"
 	"github.com/Srikarrao1/liquidity/x/liquidity/types"
 	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -28,7 +29,7 @@ func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeService store.KVStoreService,
 	logger log.Logger,
-	storeKey storetypes.StoreKey,
+	// storeKey storetypes.StoreKey,
 	authority string,
 ) Keeper {
 	if _, err := sdk.AccAddressFromBech32(authority); err != nil {
@@ -39,8 +40,8 @@ func NewKeeper(
 		cdc:          cdc,
 		storeService: storeService,
 		logger:       logger,
-		storeKey:     storeKey,
-		authority:    authority,
+		// storeKey:     storeKey,
+		authority: authority,
 	}
 }
 
@@ -56,9 +57,14 @@ func (k Keeper) Logger() log.Logger {
 
 // SetPool sets a pool in the store.
 func (k Keeper) SetPool(ctx sdk.Context, pool types.Pool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PoolKeyPrefix))
-	b := k.cdc.MustMarshal(&pool)
-	store.Set(GetPoolIDBytes(pool.Id), b)
+	// store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PoolKeyPrefix))
+	// b := k.cdc.MustMarshal(&pool)
+	// store.Set(GetPoolIDBytes(pool.Id), b)
+
+	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	store := prefix.NewStore(storeAdapter, types.KeyPrefix(types.PoolKeyPrefix))
+	appendedValue := k.cdc.MustMarshal(&pool)
+	store.Set(GetPoolIDBytes(pool.Id), appendedValue)
 }
 
 // GetPool retrieves a pool by its ID.
@@ -74,31 +80,52 @@ func (k Keeper) GetPool(ctx sdk.Context, id uint64) (val types.Pool, found bool)
 }
 
 // GetPoolIDBytes converts an ID to byte array.
+// func GetPoolIDBytes(id uint64) []byte {
+// 	return sdk.Uint64ToBigEndian(id)
+// }
+
 func GetPoolIDBytes(id uint64) []byte {
-	return sdk.Uint64ToBigEndian(id)
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, id)
+	return bz
 }
 
-// GetPoolIDFromBytes converts a byte array to an ID.
-func GetPoolIDFromBytes(bz []byte) uint64 {
-	return binary.BigEndian.Uint64(bz)
+// // GetPoolIDFromBytes converts a byte array to an ID.
+// func GetPoolIDFromBytes(bz []byte) uint64 {
+// 	return binary.BigEndian.Uint64(bz)
+// }
+
+func GetPoolIDFromBytes(id uint64) []byte {
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, id)
+	return bz
 }
 
 // SetNextPoolID sets the next pool ID in the store.
 func (k Keeper) SetNextPoolID(ctx sdk.Context, id uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NextPoolIDPrefix))
-	b := make([]byte, 8)
-	binary.BigEndian.PutUint64(b, id)
-	store.Set([]byte{0}, b)
+	// store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NextPoolIDPrefix))
+	// b := make([]byte, 8)
+	// binary.BigEndian.PutUint64(b, id)
+	// store.Set([]byte{0}, b)
+
+	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	store := prefix.NewStore(storeAdapter, []byte{})
+	byteKey := types.KeyPrefix(types.NextPoolIDPrefix)
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, id)
+	store.Set(byteKey, bz)
 }
 
 // GetNextPoolID retrieves the next pool ID from the store.
 func (k Keeper) GetNextPoolID(ctx sdk.Context) (id uint64, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NextPoolIDPrefix))
-	bz := store.Get([]byte{0})
+	fmt.Println("csdcds=12")
+	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	store := prefix.NewStore(storeAdapter, []byte{})
+	byteKey := types.KeyPrefix(types.NextPoolIDPrefix)
+	bz := store.Get(byteKey)
 	if bz == nil {
 		return 0, false
 	}
-
 	id = binary.BigEndian.Uint64(bz)
 	return id, true
 }

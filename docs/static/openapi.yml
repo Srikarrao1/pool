@@ -15240,6 +15240,10 @@ paths:
               amountB:
                 type: integer
                 format: int32
+              tokenA:
+                type: string
+              tokenB:
+                type: string
             title: Define the Add Liquidity message
       tags:
         - Msg
@@ -21834,6 +21838,10 @@ definitions:
       amountB:
         type: integer
         format: int32
+      tokenA:
+        type: string
+      tokenB:
+        type: string
     title: Define the Add Liquidity message
   liquidity.liquidity.MsgAddLiquidityResponse:
     type: object
