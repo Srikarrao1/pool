@@ -17,7 +17,11 @@ service Msg {
   // UpdateParams defines a (governance) operation for updating the module
   // parameters. The authority defaults to the x/gov module account.
   rpc UpdateParams (MsgUpdateParams) returns (MsgUpdateParamsResponse);
+  // CreatePool defines a governance operation for creating the pool 
+  //and returning the create pool response
   rpc CreatePool   (MsgCreatePool  ) returns (MsgCreatePoolResponse  );
+   // AddLiquidity defines a governance operation for Adding the liquidity 
+  //and returning the Liquidity response
   rpc AddLiquidity (MsgAddLiquidity) returns (MsgAddLiquidityResponse);
 }
 // MsgUpdateParams is the Msg/UpdateParams request type.
