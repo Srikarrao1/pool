@@ -7,7 +7,6 @@ import (
 	"github.com/Srikarrao1/liquidity/x/liquidity/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 )
 
 func (k msgServer) AddLiquidity(goCtx context.Context, msg *types.MsgAddLiquidity) (*types.MsgAddLiquidityResponse, error) {
@@ -19,9 +18,9 @@ func (k msgServer) AddLiquidity(goCtx context.Context, msg *types.MsgAddLiquidit
         return nil,  errorsmod.Wrap(sdkerrors.ErrUnknownRequest, "pool not found")
     }
 
-    if msg.TokenA != pool.AssetA || msg.TokenB != pool.AssetB {
-        return nil, errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "tokens do not match pool's tokens")
-    }
+    // if msg.TokenA != pool.AssetA || msg.TokenB != pool.AssetB {
+    //     return nil, errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "tokens do not match pool's tokens")
+    // }
 
       // Ensure the provided amounts maintain the X*Y=K curve
       if !isValidAddition(int64(pool.ReserveA), int64(pool.ReserveB), int64(msg.AmountA), int64(msg.AmountB)) {
@@ -62,28 +61,3 @@ func calculateLPTokens(totalLiquidity, newReserveA, newReserveB uint64) uint64 {
     }
     return (totalLiquidity * totalLiquidity) / (newReserveA * newReserveB)
 }
-
-// func (k Keeper) GetPool(ctx sdk.Context, id uint64) (types.Pool, bool) {
-// 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PoolKeyPrefix))
-
-//     key := types.KeyPrefix(types.PoolKey)
-//     key = append(key, sdk.Uint64ToBigEndian(id)...)
-
-//     if !store.Has(key) {
-//         return types.Pool{}, false
-//     }
-
-//     var pool types.Pool
-//     b := store.Get(key)
-//     k.cdc.MustUnmarshal(b, &pool)
-//     return pool, true
-// }
-
-// func (k Keeper) SetPool(ctx sdk.Context, pool types.Pool) {
-//     store := ctx.KVStore(k.storeKey)
-//     key := types.KeyPrefix(types.PoolKey)
-//     key = append(key, sdk.Uint64ToBigEndian(pool.Id)...)
-
-//     value := k.cdc.MustMarshal(&pool)
-//     store.Set(key, value)
-// }

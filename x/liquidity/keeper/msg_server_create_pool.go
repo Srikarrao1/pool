@@ -10,15 +10,12 @@ import (
 )
 
 func (k msgServer) CreatePool(goCtx context.Context, msg *types.MsgCreatePool) (*types.MsgCreatePoolResponse, error) {
-	fmt.Println("cscds==========12345")
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	nextPoolId, found := k.GetNextPoolID(ctx)
 	if !found {
 		nextPoolId = 1
 	}
-
-	fmt.Println("cscds==========12345", nextPoolId)
 
 	// Initial amounts must be greater than zero and should form a valid constant product
 	if msg.InitialAmountA <= 0 || msg.InitialAmountB <= 0 {
@@ -35,12 +32,11 @@ func (k msgServer) CreatePool(goCtx context.Context, msg *types.MsgCreatePool) (
 		ReserveB: msg.InitialAmountB,
 	}
 
-	fmt.Println("cscds==========pool", pool)
 
 	k.SetPool(ctx, pool)
-	fmt.Println("cscds==========pool")
+
 	k.SetNextPoolID(ctx, nextPoolId+1)
-	fmt.Println("cscds==========pool78")
+
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeCreatePool,
